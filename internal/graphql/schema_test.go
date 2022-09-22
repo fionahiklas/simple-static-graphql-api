@@ -9,7 +9,7 @@ import (
 func TestSchema(t *testing.T) {
 
 	t.Run("embedded string returned", func(t *testing.T) {
-		result := graphql.NewGraphQLAPI()
+		result := graphql.NewGraphQL()
 		require.NotNil(t, result)
 	})
 }

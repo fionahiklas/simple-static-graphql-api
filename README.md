@@ -10,7 +10,7 @@
 * Created initial module file
 
 ```
-go mod init simple-static-graphql-api
+go mod init github.com/fionahiklas/simple-static-graphql-api
 ```
 
 * Adding dependency 

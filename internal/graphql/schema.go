@@ -9,7 +9,13 @@ import (
 //go:embed schema.graphql
 var schemaString string
 
-func NewGraphQLAPI() http.Handler {
+type graphQLApi struct{}
+
+func NewGraphQL() *graphQLApi {
 	graphqlgo.MustParseSchema(schemaString, nil)
 	return nil
+}
+
+func (g *graphQLApi) ServerHTTP(w http.ResponseWriter, r *http.Request) {
+
 }
