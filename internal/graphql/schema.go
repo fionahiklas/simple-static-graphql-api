@@ -2,6 +2,7 @@ package graphql
 
 import (
 	_ "embed"
+	graphqlgo "github.com/graph-gophers/graphql-go"
 	"net/http"
 )
 
@@ -9,5 +10,6 @@ import (
 var schemaString string
 
 func NewGraphQLAPI() http.Handler {
+	graphqlgo.MustParseSchema(schemaString, nil)
 	return nil
 }
