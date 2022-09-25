@@ -16,7 +16,7 @@ type AlarmSystem {
   id: ID!
   name: String!
   description: String
-  sensors: [ Sensor! ]!
+  sensors: [ Sensor! ]
 }
 
 # Homes only have, for now, zero or one alarm system
@@ -29,16 +29,16 @@ type Home {
 
 type Query {
   # Get a list of all known homes
-  homes: [Home!]!
+  homes: [ Home! ]
 
   # Single home
-  home(input: ID!): Home
+  home(homeId: ID!): Home
 
   # All alarm systems
-  alarmSystems: [AlarmSystem!]!
+  alarmSystems: [ AlarmSystem! ]
 
   # Specific alarm
-  alarmSystem(input: ID!): AlarmSystem
+  alarmSystem(alarmSystemId: ID!): AlarmSystem
 }
 
 input NewHome {
@@ -46,11 +46,12 @@ input NewHome {
   description: String
 }
 
-# TODO: Need to add creation of alarm, sensors<<
-type Mutation {
-  # Create a new home
-  createHome(input: NewHome!): Home!
-}
+# TODO: Commented out for now
+# TODO: Need to add creation of alarm, sensors, etc
+#type Mutation {
+#  # Create a new home
+#  createHome(input: NewHome!): Home!
+#}
 
 schema {
   query: Query

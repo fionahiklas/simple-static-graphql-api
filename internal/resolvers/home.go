@@ -2,16 +2,19 @@ package resolvers
 
 import (
 	"context"
-	graphqlgo "github.com/graph-gophers/graphql-go"
+	"errors"
+	"github.com/graph-gophers/graphql-go"
 )
+
+var emptyString = ""
 
 type HomeResolver struct{}
 
-func NewHome(ctx context.Context) *HomeResolver {
-	return nil
+func NewHomeResolver(ctx context.Context) *HomeResolver {
+	return &HomeResolver{}
 }
 
-func (hr *HomeResolver) ID() graphqlgo.ID {
+func (hr *HomeResolver) ID() graphql.ID {
 	return ""
 }
 
@@ -19,10 +22,10 @@ func (hr *HomeResolver) Name() string {
 	return ""
 }
 
-func (hr *HomeResolver) Description() string {
-	return ""
+func (hr *HomeResolver) Description() *string {
+	return &emptyString
 }
 
-func (hr *HomeResolver) AlarmSystem() string {
-	return ""
+func (hr *HomeResolver) AlarmSystem() (*AlarmSystemResolver, error) {
+	return nil, errors.New("not implemented")
 }

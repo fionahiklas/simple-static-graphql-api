@@ -1,8 +1,8 @@
-package graphql
+package graphapi
 
 import (
 	_ "embed"
-	graphqlgo "github.com/graph-gophers/graphql-go"
+	graphql "github.com/graph-gophers/graphql-go"
 	"net/http"
 )
 
@@ -10,12 +10,12 @@ import (
 var schemaString string
 
 type graphQLApi struct {
-	schema *graphqlgo.Schema
+	schema *graphql.Schema
 }
 
 func NewGraphQL(rootResolver interface{}) *graphQLApi {
 	return &graphQLApi{
-		schema: graphqlgo.MustParseSchema(schemaString, rootResolver),
+		schema: graphql.MustParseSchema(schemaString, rootResolver),
 	}
 }
 
