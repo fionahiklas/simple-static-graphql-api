@@ -12,7 +12,7 @@ func NewSensorResolver(ctx context.Context) *SensorResolver {
 	return &SensorResolver{}
 }
 
-func (sr *SensorResolver) ID() graphql.ID {
+func (sr *SensorResolver) Identifier() graphql.ID {
 	return ""
 }
 

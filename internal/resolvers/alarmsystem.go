@@ -13,7 +13,7 @@ func NewAlarmSystemResolver(ctx context.Context) *AlarmSystemResolver {
 	return &AlarmSystemResolver{}
 }
 
-func (ar *AlarmSystemResolver) ID() graphql.ID {
+func (ar *AlarmSystemResolver) Identifier() graphql.ID {
 	return ""
 }
 

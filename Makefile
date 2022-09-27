@@ -1,5 +1,5 @@
 
-.PHONY: help tidy install_tools lint format test test_clean test_report
+.PHONY: help tidy install_tools lint format generate test test_clean test_report
 
 # from https://suva.sh/posts/well-documented-makefiles/
 # sorting from https://stackoverflow.com/questions/14562423/is-there-a-way-to-ignore-header-lines-in-a-unix-sort
@@ -13,12 +13,16 @@ tidy: ## Ensure modules are downloaded
 install_tools: tidy ## Install tooling needed by other targets
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint
 	go install golang.org/x/tools/cmd/goimports
+	go install github.com/golang/mock/mockgen
 
 lint: ## Lint codebase
 	golangci-lint -E goimports run internal/...
 
 format: ## Format codebase and check imports
 	goimports -w internal/
+
+generate: ## Generate mock files
+	go generate ./internal/...
 
 clean_test_cache: ## Allows all tests to be forced to run without using cached results
 	go clean -testcache

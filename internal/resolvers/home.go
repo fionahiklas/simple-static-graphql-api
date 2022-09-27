@@ -15,7 +15,7 @@ func NewHomeResolver(ctx context.Context) *HomeResolver {
 	return &HomeResolver{}
 }
 
-func (hr *HomeResolver) ID() graphql.ID {
+func (hr *HomeResolver) Identifier() graphql.ID {
 	return ""
 }
 

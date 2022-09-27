@@ -8,4 +8,8 @@
 # Coverage
 coverage.out
 
+# Mock files
+mock_*.go
+
+
 

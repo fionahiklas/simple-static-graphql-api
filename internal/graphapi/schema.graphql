@@ -5,7 +5,7 @@
 # Sensors are used to feed events to the alarm system
 # they will eventually have more details
 type Sensor {
-  id: ID!
+  identifier: ID!
   name: String!
   description: String
 }
@@ -13,7 +13,7 @@ type Sensor {
 # An alarm system consists of sensors
 # TODO: Add alarm type and field
 type AlarmSystem {
-  id: ID!
+  identifier: ID!
   name: String!
   description: String
   sensors: [ Sensor! ]
@@ -21,7 +21,7 @@ type AlarmSystem {
 
 # Homes only have, for now, zero or one alarm system
 type Home {
-  id: ID!
+  identifier: ID!
   name: String!
   description: String
   alarmSystem: AlarmSystem
