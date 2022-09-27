@@ -48,4 +48,5 @@ to implement accessors for every field in the GraphQL type
 * [GraphQL Playground](https://github.com/graphql/graphql-playground)
 * [GraphQL schema basics](https://www.apollographql.com/docs/apollo-server/schema/schema/)
 * [Introspection](https://graphql.org/learn/introspection/)
+* [GraphQL spec](https://github.com/graphql/graphql-spec/blob/main/README.md)
 

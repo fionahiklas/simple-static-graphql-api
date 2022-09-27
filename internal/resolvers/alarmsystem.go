@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+
 	"github.com/graph-gophers/graphql-go"
 )
 

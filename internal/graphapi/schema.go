@@ -2,8 +2,9 @@ package graphapi
 
 import (
 	_ "embed"
-	graphql "github.com/graph-gophers/graphql-go"
 	"net/http"
+
+	graphql "github.com/graph-gophers/graphql-go"
 )
 
 //go:embed schema.graphql
