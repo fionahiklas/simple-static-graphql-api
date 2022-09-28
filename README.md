@@ -50,3 +50,10 @@ to implement accessors for every field in the GraphQL type
 * [Introspection](https://graphql.org/learn/introspection/)
 * [GraphQL spec](https://github.com/graphql/graphql-spec/blob/main/README.md)
 
+
+### Github Actions
+
+* [Setup Go action](https://github.com/actions/setup-go)
+* [Go tutorial post](https://medium.com/swlh/setting-up-github-actions-for-go-project-ea84f4ed3a40)
+* [Versioning for Go setup](https://github.com/npm/node-semver)
+
