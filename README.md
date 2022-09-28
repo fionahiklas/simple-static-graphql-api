@@ -2,6 +2,9 @@
 
 ## Overview
 
+Simple test application for GraphQL API in Go
+
+![Main build](https://github.com/fionahiklas/simple-static-graphql-api/actions/workflows/build-and-test.yaml/badge.svg?branch=main)
 
 ## Notes
 
@@ -56,4 +59,4 @@ to implement accessors for every field in the GraphQL type
 * [Setup Go action](https://github.com/actions/setup-go)
 * [Go tutorial post](https://medium.com/swlh/setting-up-github-actions-for-go-project-ea84f4ed3a40)
 * [Versioning for Go setup](https://github.com/npm/node-semver)
-
+* [Actions build badge](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge)
