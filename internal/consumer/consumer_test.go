@@ -1,11 +1,12 @@
 package consumer_test
 
 import (
-	"github.com/pact-foundation/pact-go/dsl"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
+
+	"github.com/pact-foundation/pact-go/dsl"
 
 	"github.com/fionahiklas/simple-static-graphql-api/internal/consumer"
 	"github.com/golang/mock/gomock"
