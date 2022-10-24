@@ -67,3 +67,5 @@ build_provider: ## Build the provider application using native target or from in
 build_consumer: ## Build the consumer application using native target or from inside Docker
 	@echo "Building local '${APP_NAME_CONSUMER}' for '${TARGETARCH}' on '${TARGETOS}'"
 	CGO_ENABLED=0 go build -ldflags="-X main.commitHash=${COMMIT_HASH} -X main.codeVersion=${CODE_VERSION}" -o ${BUILD_PATH}/${APP_NAME_CONSUMER}-${TARGETOS}-${TARGETARCH} ./cmd/${APP_NAME_CONSUMER}
+
+build: build_provider build_consumer ## Build everything

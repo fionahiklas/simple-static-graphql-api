@@ -48,5 +48,14 @@ func (qr *queryResolver) AlarmSystem(ctx context.Context, args AlarmSystemArgs) 
 }
 
 func (qr *queryResolver) AlarmSystems(ctx context.Context) (*[]*AlarmSystemResolver, error) {
-	return nil, nil
+	alarmsFromStorage := qr.storage.GetAlarms()
+	var alarmsResult []*AlarmSystemResolver = nil
+	if alarmsFromStorage != nil {
+		alarmsResult = make([]*AlarmSystemResolver, 0, len(alarmsFromStorage))
+		for _, alarm := range alarmsFromStorage {
+			alarmsResult = append(alarmsResult, NewAlarmSystemResolver(qr.log, ctx, alarm))
+		}
+	}
+	return &alarmsResult, nil
+
 }
