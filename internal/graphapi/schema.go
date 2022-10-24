@@ -2,6 +2,7 @@ package graphapi
 
 import (
 	_ "embed"
+	"github.com/fionahiklas/simple-static-graphql-api/pkg/alarmstorage"
 	"github.com/graph-gophers/graphql-go/relay"
 	"net/http"
 
@@ -19,12 +20,14 @@ type logger interface {
 var schemaString string
 
 type graphQLApi struct {
-	schema *graphql.Schema
+	schema  *graphql.Schema
+	storage alarmstorage.ReadAndWrite
 }
 
-func NewGraphQLAPI(log logger) *graphQLApi {
+func NewGraphQLAPI(log logger, storage alarmstorage.ReadAndWrite) *graphQLApi {
 	return &graphQLApi{
-		schema: graphql.MustParseSchema(schemaString, NewRoot(log)),
+		schema:  graphql.MustParseSchema(schemaString, NewRoot(log, storage)),
+		storage: storage,
 	}
 }
 

@@ -9,6 +9,6 @@ import (
 )
 
 func TestNewHome(t *testing.T) {
-	result := graphapi.NewHomeResolver(context.Background())
+	result := graphapi.NewHomeResolver(nil, context.Background(), nil)
 	require.NotNil(t, result)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/fionahiklas/simple-static-graphql-api/internal/graphapi"
 	"github.com/fionahiklas/simple-static-graphql-api/pkg/graphiqlhandler"
+	"github.com/fionahiklas/simple-static-graphql-api/pkg/teststorage"
 	"github.com/fionahiklas/simple-static-graphql-api/pkg/versionhandler"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -20,7 +21,9 @@ func main() {
 
 	log.SetLevel(logrus.DebugLevel)
 
-	graphApi := graphapi.NewGraphQLAPI(log)
+	dummyData := teststorage.NewStorage(log)
+
+	graphApi := graphapi.NewGraphQLAPI(log, dummyData)
 	graphApiHandler := graphApi.GetHandler()
 	versionHandler := versionhandler.NewHandler(log, codeVersion, commitHash)
 	graphiqlHandler := graphiqlhandler.NewHandler(log)

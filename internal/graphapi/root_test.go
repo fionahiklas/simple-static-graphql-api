@@ -10,6 +10,6 @@ import (
 
 func TestNewRoot(t *testing.T) {
 	log := logrus.New()
-	result := graphapi.NewRoot(log)
+	result := graphapi.NewRoot(log, nil)
 	require.NotNil(t, result)
 }

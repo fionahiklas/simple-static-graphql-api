@@ -3,26 +3,35 @@ package graphapi
 import (
 	"context"
 	"errors"
+	"github.com/fionahiklas/simple-static-graphql-api/pkg/alarmstorage"
 
 	"github.com/graph-gophers/graphql-go"
 )
 
-type AlarmSystemResolver struct{}
+type AlarmSystemResolver struct {
+	log   logger
+	ctx   context.Context
+	alarm *alarmstorage.Alarm
+}
 
-func NewAlarmSystemResolver(ctx context.Context) *AlarmSystemResolver {
-	return &AlarmSystemResolver{}
+func NewAlarmSystemResolver(log logger, ctx context.Context, alarm *alarmstorage.Alarm) *AlarmSystemResolver {
+	return &AlarmSystemResolver{
+		log:   log,
+		ctx:   ctx,
+		alarm: alarm,
+	}
 }
 
 func (ar *AlarmSystemResolver) Identifier() graphql.ID {
-	return ""
+	return graphql.ID(ar.alarm.Id)
 }
 
 func (ar *AlarmSystemResolver) Name() string {
-	return ""
+	return ar.alarm.Name
 }
 
 func (ar *AlarmSystemResolver) Description() *string {
-	return &emptyString
+	return &ar.alarm.Description
 }
 
 func (ar *AlarmSystemResolver) Sensors() (*[]*SensorResolver, error) {

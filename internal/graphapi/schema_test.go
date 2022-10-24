@@ -12,7 +12,7 @@ func TestSchema(t *testing.T) {
 
 	t.Run("schema and resolvers match", func(t *testing.T) {
 		log := logrus.New()
-		result := graphapi.NewGraphQLAPI(log)
+		result := graphapi.NewGraphQLAPI(log, nil)
 		require.NotNil(t, result)
 	})
 }

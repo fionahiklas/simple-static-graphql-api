@@ -2,22 +2,33 @@ package graphapi
 
 import (
 	"context"
+	"github.com/fionahiklas/simple-static-graphql-api/pkg/alarmstorage"
 
 	"github.com/graph-gophers/graphql-go"
 )
 
 type queryResolver struct {
-	log logger
+	log     logger
+	storage alarmstorage.ReadAndWrite
 }
 
-func NewRoot(log logger) *queryResolver {
+func NewRoot(log logger, storage alarmstorage.ReadAndWrite) *queryResolver {
 	return &queryResolver{
-		log: log,
+		log:     log,
+		storage: storage,
 	}
 }
 
 func (qr *queryResolver) Homes(ctx context.Context) (*[]*HomeResolver, error) {
-	return nil, nil
+	homesFromStorage := qr.storage.GetHomes()
+	var homesResult []*HomeResolver = nil
+	if homesFromStorage != nil {
+		homesResult = make([]*HomeResolver, 0, len(homesFromStorage))
+		for _, home := range homesFromStorage {
+			homesResult = append(homesResult, NewHomeResolver(qr.log, ctx, home))
+		}
+	}
+	return &homesResult, nil
 }
 
 type HomeQueryArgs struct {
