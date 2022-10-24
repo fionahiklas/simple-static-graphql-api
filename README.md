@@ -57,6 +57,7 @@ to implement accessors for every field in the GraphQL type
 
 * [JMESPath Go implementation](https://github.com/jmespath/go-jmespath)
 * [JMESPath Tutorial](https://jmespath.org/tutorial.html)
+* [Converting from arrays of interface](https://stackoverflow.com/questions/12753805/type-converting-slices-of-interfaces)
 
 
 ### Github Actions
@@ -69,4 +70,12 @@ to implement accessors for every field in the GraphQL type
 
 ### Pact testing 
 
+* [Pact testing homepage](https://pact.io)
+* [Pact documentation](https://docs.pact.io)
+* [Pact testing tutorial](https://medium.com/nerd-for-tech/the-ultimate-guide-for-contract-testing-with-pact-and-go-177b4af13700)
+* [Pact go workshop](https://github.com/pact-foundation/pact-workshop-go)
+* [Pact go implementation](https://github.com/pact-foundation/pact-go)
 
+### Ruby
+
+* [Bundler](https://bundler.io/v2.3/man/bundle.1.html)

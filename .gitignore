@@ -18,4 +18,13 @@ build
 tmp
 temp
 
+# Ruby
+.gem
 
+# This contains config which might use absolute paths
+.bundle
+
+# Logging
+
+# Pact testing seemed to create a `logs` directory
+logs

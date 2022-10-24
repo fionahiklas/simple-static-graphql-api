@@ -1,6 +1,7 @@
 package consumer_test
 
 import (
+	"github.com/pact-foundation/pact-go/dsl"
 	"io"
 	"net/http"
 	"strings"
@@ -19,7 +20,9 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 	)
 
 	// For now don't bother with using a mock for the logger
-	var logger = logrus.New()
+	log := logrus.New()
+	log.SetLevel(logrus.DebugLevel)
+
 	var mockHttpClient *MockhttpClient
 
 	resetMocks := func(t *testing.T) {
@@ -36,7 +39,7 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 
 	t.Run("happy path", func(t *testing.T) {
 		resetMocks(t)
-		consumerToTest := consumer.NewConsumer(logger, mockHttpClient, testCallUrl)
+		consumerToTest := consumer.NewConsumer(log, mockHttpClient, testCallUrl)
 
 		mockHttpClient.EXPECT().Do(gomock.Any()).DoAndReturn(func(request *http.Request) (*http.Response, error) {
 			require.Equal(t, testCallUrl, request.URL.String())
@@ -46,5 +49,19 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 		alarmResult, err := consumerToTest.GetAllAlarmNames()
 		require.NoError(t, err)
 		require.Equal(t, 3, len(alarmResult))
+	})
+
+	t.Run("pact consumer test", func(t *testing.T) {
+		pactInstance := dsl.Pact{
+			// TODO: Are there names significant?
+			Consumer: "apiconsumer",
+			Provider: "apiprovider",
+		}
+
+		// The 'true' argument means "start the mock server"
+		pactInstance.Setup(true)
+
+		log.Debugf("Pact server host: %s", pactInstance.Host)
+		log.Debugf("Pact server port: %d", pactInstance.Server.Port)
 	})
 }
