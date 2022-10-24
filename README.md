@@ -4,8 +4,6 @@
 
 Simple test application for GraphQL API in Go
 
-[//]: #The README gets rendered as /blob/main/README so this should point to actual build badge
-
 ![Main build](../../actions/workflows/build-and-test.yaml/badge.svg?branch=main)
 
 ## Notes
@@ -55,6 +53,11 @@ to implement accessors for every field in the GraphQL type
 * [Introspection](https://graphql.org/learn/introspection/)
 * [GraphQL spec](https://github.com/graphql/graphql-spec/blob/main/README.md)
 
+### Other Go
+
+* [JMESPath Go implementation](https://github.com/jmespath/go-jmespath)
+* [JMESPath Tutorial](https://jmespath.org/tutorial.html)
+
 
 ### Github Actions
 
@@ -62,3 +65,8 @@ to implement accessors for every field in the GraphQL type
 * [Go tutorial post](https://medium.com/swlh/setting-up-github-actions-for-go-project-ea84f4ed3a40)
 * [Versioning for Go setup](https://github.com/npm/node-semver)
 * [Actions build badge](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge)
+
+
+### Pact testing 
+
+

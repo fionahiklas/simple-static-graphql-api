@@ -1,3 +1,4 @@
+//go:generate mockgen -package graphapi_test -destination=./mock_graphapi_test.go -source $GOFILE
 package graphapi
 
 import (
