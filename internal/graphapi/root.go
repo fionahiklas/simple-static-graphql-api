@@ -1,4 +1,4 @@
-package resolvers
+package graphapi
 
 import (
 	"context"
@@ -6,10 +6,14 @@ import (
 	"github.com/graph-gophers/graphql-go"
 )
 
-type queryResolver struct{}
+type queryResolver struct {
+	log logger
+}
 
-func NewRoot() *queryResolver {
-	return &queryResolver{}
+func NewRoot(log logger) *queryResolver {
+	return &queryResolver{
+		log: log,
+	}
 }
 
 func (qr *queryResolver) Homes(ctx context.Context) (*[]*HomeResolver, error) {

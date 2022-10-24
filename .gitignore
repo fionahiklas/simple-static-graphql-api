@@ -11,5 +11,11 @@ coverage.out
 # Mock files
 mock_*.go
 
+# Build
+build
+
+# Temp
+tmp
+temp
 
 

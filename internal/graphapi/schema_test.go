@@ -1,17 +1,18 @@
 package graphapi_test
 
 import (
+	"github.com/sirupsen/logrus"
 	"testing"
 
 	"github.com/fionahiklas/simple-static-graphql-api/internal/graphapi"
-	"github.com/fionahiklas/simple-static-graphql-api/internal/resolvers"
 	"github.com/stretchr/testify/require"
 )
 
 func TestSchema(t *testing.T) {
 
 	t.Run("schema and resolvers match", func(t *testing.T) {
-		result := graphapi.NewGraphQL(resolvers.NewRoot())
+		log := logrus.New()
+		result := graphapi.NewGraphQLAPI(log)
 		require.NotNil(t, result)
 	})
 }
