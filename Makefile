@@ -65,8 +65,11 @@ test_report: test ## Run unit tests and generate an HTML coverage report
 test_summary: test ## Output coverage summary
 	go tool cover -func=coverage.out
 
+test_consumer_pact: ## Run the pact test
+	go test -tags pact -coverprofile=coverage-consumer-pact.out ./internal/consumer/...
+
 clean: ## Clean temporary/build files
-	rm -f coverage.out
+	rm -f coverage*.out
 	rm -f build/*
 
 build_provider: ## Build the provider application using native target or from inside Docker

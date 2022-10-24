@@ -6,7 +6,7 @@
 .\#*
 
 # Coverage
-coverage.out
+coverage*.out
 
 # Mock files
 mock_*.go

@@ -1,3 +1,5 @@
+//go:build !pact
+
 package consumer_test
 
 import (
@@ -5,8 +7,6 @@ import (
 	"net/http"
 	"strings"
 	"testing"
-
-	"github.com/pact-foundation/pact-go/dsl"
 
 	"github.com/fionahiklas/simple-static-graphql-api/internal/consumer"
 	"github.com/golang/mock/gomock"
@@ -50,19 +50,5 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 		alarmResult, err := consumerToTest.GetAllAlarmNames()
 		require.NoError(t, err)
 		require.Equal(t, 3, len(alarmResult))
-	})
-
-	t.Run("pact consumer test", func(t *testing.T) {
-		pactInstance := dsl.Pact{
-			// TODO: Are there names significant?
-			Consumer: "apiconsumer",
-			Provider: "apiprovider",
-		}
-
-		// The 'true' argument means "start the mock server"
-		pactInstance.Setup(true)
-
-		log.Debugf("Pact server host: %s", pactInstance.Host)
-		log.Debugf("Pact server port: %d", pactInstance.Server.Port)
 	})
 }
