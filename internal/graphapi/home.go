@@ -3,6 +3,7 @@ package graphapi
 import (
 	"context"
 	"errors"
+
 	"github.com/fionahiklas/simple-static-graphql-api/pkg/alarmstorage"
 
 	"github.com/graph-gophers/graphql-go"

@@ -4,7 +4,7 @@
 
 Simple test application for GraphQL API in Go
 
-![Main build](https://github.com/fionahiklas/simple-static-graphql-api/actions/workflows/build-and-test.yaml/badge.svg?branch=main)
+![Main build](./actions/workflows/build-and-test.yaml/badge.svg?branch=main)
 
 ## Notes
 

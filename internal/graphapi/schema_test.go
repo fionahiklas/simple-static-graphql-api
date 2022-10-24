@@ -1,8 +1,9 @@
 package graphapi_test
 
 import (
-	"github.com/sirupsen/logrus"
 	"testing"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/fionahiklas/simple-static-graphql-api/internal/graphapi"
 	"github.com/stretchr/testify/require"

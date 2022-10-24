@@ -2,9 +2,10 @@ package graphapi
 
 import (
 	_ "embed"
+	"net/http"
+
 	"github.com/fionahiklas/simple-static-graphql-api/pkg/alarmstorage"
 	"github.com/graph-gophers/graphql-go/relay"
-	"net/http"
 
 	graphql "github.com/graph-gophers/graphql-go"
 )

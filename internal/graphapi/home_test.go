@@ -2,8 +2,9 @@ package graphapi_test
 
 import (
 	"context"
-	"github.com/fionahiklas/simple-static-graphql-api/internal/graphapi"
 	"testing"
+
+	"github.com/fionahiklas/simple-static-graphql-api/internal/graphapi"
 
 	"github.com/stretchr/testify/require"
 )
