@@ -7,11 +7,9 @@ name: BuildAndTest
 # events but only for the master branch
 on:
   push:
-    branches:
-      - main
+    branches: ['*']
   pull_request:
-    branches:
-      - main
+    branches: ['*']
 
 jobs:
 
