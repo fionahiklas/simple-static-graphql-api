@@ -79,3 +79,5 @@ to implement accessors for every field in the GraphQL type
 ### Ruby
 
 * [Bundler](https://bundler.io/v2.3/man/bundle.1.html)
+* [Adding a Gem path](https://stackoverflow.com/questions/44293904/add-a-gem-path)
+
