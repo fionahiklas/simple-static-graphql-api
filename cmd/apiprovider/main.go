@@ -30,6 +30,7 @@ func main() {
 	mux.Handle("/version", versionHandler)
 	mux.Handle("/iql", graphiqlHandler)
 
+	log.Infof("Starting provider on localhost:7777")
 	if err := http.ListenAndServe("localhost:7777", mux); err != nil {
 		log.Error(context.Background(), "Error from HTTP server: %s", err.Error())
 	}
