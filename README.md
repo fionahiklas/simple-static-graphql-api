@@ -4,7 +4,8 @@
 
 Simple test application for GraphQL API in Go
 
-[//]: # The README gets rendered as /blob/main/README so this should point to actual build badge
+[//]: #The README gets rendered as /blob/main/README so this should point to actual build badge
+
 ![Main build](../../actions/workflows/build-and-test.yaml/badge.svg?branch=main)
 
 ## Notes
