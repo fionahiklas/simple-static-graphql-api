@@ -50,15 +50,15 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 			UponReceiving("All Alarms is requested").
 			WithRequest(dsl.Request{
 				Method: http.MethodPost,
-				Path:   dsl.Term("/graphql"),
+				Path:   dsl.Match(graphQLPathSuffix),
 				// Using trim to make the body slightly different to the one the consumer really sends
 				Body:    strings.TrimSpace(consumer.AllAlarmSystemQuery),
-				Headers: http.Header{"Content-Type": {"application/json"}},
+				Headers: dsl.MapMatcher{"Content-Type": dsl.Match([]string{"application/json"})},
 			}).
 			WillRespondWith(dsl.Response{
 				Status:  http.StatusOK,
 				Body:    testHappyResponse,
-				Headers: http.Header{"Content-Type": {"application/json"}},
+				Headers: dsl.MapMatcher{"Content-Type": dsl.Match([]string{"application/json"})},
 			})
 
 		err := pactInstance.Verify(func() error {
