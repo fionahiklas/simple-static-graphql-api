@@ -38,10 +38,10 @@ install_tools: tidy ## Install tooling needed by other targets
 	go install github.com/golang/mock/mockgen
 
 lint: ## Lint codebase
-	golangci-lint -E goimports run internal/...
+	golangci-lint -E goimports run ./internal/... ./pkg/...
 
 format: ## Format codebase and check imports
-	goimports -w internal/
+	goimports -w ./internal ./pkg
 
 delete_mock: ## Deletes all files that match `mock_*.go`
 	@echo "Deleting all mocks"
@@ -66,7 +66,7 @@ test_summary: test ## Output coverage summary
 	go tool cover -func=coverage.out
 
 test_consumer_pact: ## Run the pact test
-	go test -tags pact -coverprofile=coverage-consumer-pact.out ./internal/consumer/...
+	PACT_DO_NOT_TRACK=true go test -v -tags pact -coverprofile=coverage-consumer-pact.out ./internal/consumer/...
 
 clean: ## Clean temporary/build files
 	rm -f coverage*.out

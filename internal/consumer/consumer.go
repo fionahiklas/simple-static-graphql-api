@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	allAlarmSystemQuery  = `{ "query": "{ alarmSystems { name } }" }`
-	jmesPathForAlarmList = "data.alarmSystems[*].name"
+	AllAlarmSystemQuery  = `{ "query": "{ alarmSystems { name } }" }`
+	JmesPathForAlarmList = "data.alarmSystems[*].name"
 )
 
 type logger interface {
@@ -67,7 +67,7 @@ func (con *consumer) GetAllAlarmNames() ([]string, error) {
 		return nil, err
 	}
 
-	jmesPathExpression, err := jmespath.Compile(jmesPathForAlarmList)
+	jmesPathExpression, err := jmespath.Compile(JmesPathForAlarmList)
 	if err != nil {
 		con.log.Errorf("JMESPath '%s' doesn't compile: ", jmesPathExpression, err)
 		return nil, err
@@ -96,9 +96,9 @@ func (con *consumer) buildAllAlarmSystemRequest() *http.Request {
 		return nil
 	}
 	return &http.Request{
-		Method: "POST",
+		Method: http.MethodPost,
 		URL:    url,
-		Body:   io.NopCloser(strings.NewReader(allAlarmSystemQuery)),
+		Body:   io.NopCloser(strings.NewReader(AllAlarmSystemQuery)),
 		Header: http.Header{"Content-Type": {"application/json"}},
 	}
 }
