@@ -59,6 +59,9 @@ to implement accessors for every field in the GraphQL type
 * [JMESPath Tutorial](https://jmespath.org/tutorial.html)
 * [Converting from arrays of interface](https://stackoverflow.com/questions/12753805/type-converting-slices-of-interfaces)
 * [Trim whitespace](https://yourbasic.org/golang/trim-whitespace-from-string/)
+* [Listen on random/free port](https://stackoverflow.com/questions/43424787/how-to-use-next-available-port-in-http-listenandserve)
+* [Read whole file](https://stackoverflow.com/questions/13514184/how-can-i-read-a-whole-file-into-a-string-variable)
+* [Using go ldflags to set version values](https://www.digitalocean.com/community/tutorials/using-ldflags-to-set-version-information-for-go-applications)
 
 ### Github Actions
 
@@ -82,3 +85,6 @@ to implement accessors for every field in the GraphQL type
 * [Bundler](https://bundler.io/v2.3/man/bundle.1.html)
 * [Adding a Gem path](https://stackoverflow.com/questions/44293904/add-a-gem-path)
 
+### UNIX
+
+* [Getting fields from input](https://stackoverflow.com/questions/16136943/how-to-get-the-second-column-from-command-output)

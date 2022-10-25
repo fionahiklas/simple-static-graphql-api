@@ -11,8 +11,13 @@ TARGETOS ?= $(shell uname -s)
 DOCKER_REGISTRY ?= host.docker.internal:5555
 
 BUILD_PATH ?= $(CURDIR)/build
+
+GO_MODULE_PATH ?= $(shell head -1 go.mod | cut -d' ' -f2-)
 COMMIT_HASH ?= $(shell git rev-parse --short HEAD)
 CODE_VERSION ?= $(shell cat ./VERSION)
+
+GO_LD_FLAGS = -ldflags="-X ${GO_MODULE_PATH}/internal/version.commitHash=${COMMIT_HASH} -X ${GO_MODULE_PATH}/internal/version.codeVersion=${CODE_VERSION}"
+
 
 .PHONY: help version tidy install_tools lint format generate test test_clean test_report
 
@@ -57,7 +62,7 @@ test_clean: clean_test_cache test ## Run tests but clear the cache first
 
 test: ## Run unit tests and check coverage
 	@echo "Running unit tests"
-	go test -coverprofile=coverage.out ./...
+	go test ${GO_LD_FLAGS} -coverprofile=coverage.out ./...
 
 test_report: test ## Run unit tests and generate an HTML coverage report
 	go tool cover -html=coverage.out
@@ -66,18 +71,21 @@ test_summary: test ## Output coverage summary
 	go tool cover -func=coverage.out
 
 test_consumer_pact: ## Run the pact test
-	PACT_DO_NOT_TRACK=true go test -v -tags pact -coverprofile=coverage-consumer-pact.out ./internal/consumer/...
+	PACT_DO_NOT_TRACK=true go test ${GO_LD_FLAGS} -v -tags pact -coverprofile=coverage-consumer-pact.out ./internal/consumer/...
+
+test_provider_pact: ## Run the pact test
+	PACT_DO_NOT_TRACK=true go test ${GO_LD_FLAGS} -v -tags pact -coverprofile=coverage-consumer-pact.out ./internal/provider/...
 
 clean: ## Clean temporary/build files
 	rm -f coverage*.out
-	rm -f build/*
+	rm -rf build/*
 
 build_provider: ## Build the provider application using native target or from inside Docker
 	@echo "Building local '${APP_NAME_PROVIDER}' for '${TARGETARCH}' on '${TARGETOS}'"
-	CGO_ENABLED=0 go build -ldflags="-X main.commitHash=${COMMIT_HASH} -X main.codeVersion=${CODE_VERSION}" -o ${BUILD_PATH}/${APP_NAME_PROVIDER}-${TARGETOS}-${TARGETARCH} ./cmd/${APP_NAME_PROVIDER}
+	CGO_ENABLED=0 go build ${GO_LD_FLAGS} -o ${BUILD_PATH}/${APP_NAME_PROVIDER}-${TARGETOS}-${TARGETARCH} ./cmd/${APP_NAME_PROVIDER}
 
 build_consumer: ## Build the consumer application using native target or from inside Docker
 	@echo "Building local '${APP_NAME_CONSUMER}' for '${TARGETARCH}' on '${TARGETOS}'"
-	CGO_ENABLED=0 go build -ldflags="-X main.commitHash=${COMMIT_HASH} -X main.codeVersion=${CODE_VERSION}" -o ${BUILD_PATH}/${APP_NAME_CONSUMER}-${TARGETOS}-${TARGETARCH} ./cmd/${APP_NAME_CONSUMER}
+	CGO_ENABLED=0 go build ${GO_LD_FLAGS} -o ${BUILD_PATH}/${APP_NAME_CONSUMER}-${TARGETOS}-${TARGETARCH} ./cmd/${APP_NAME_CONSUMER}
 
 build: build_provider build_consumer ## Build everything

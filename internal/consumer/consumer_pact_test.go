@@ -32,11 +32,11 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 
 	t.Run("pact consumer test", func(t *testing.T) {
 		pactInstance := dsl.Pact{
-			// TODO: Are there names significant?
+			// These names are used
 			Consumer: "apiconsumer",
 			Provider: "apiprovider",
-			LogDir:   "../../build/pact/logs",
-			PactDir:  "../../build/pact",
+			LogDir:   "../../build/pact/consumer/logs",
+			PactDir:  "../../build/pact/consumer",
 		}
 
 		// The 'true' argument means "start the mock server"
