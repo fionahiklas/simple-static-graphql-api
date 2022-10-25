@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 	"testing"
 
 	"github.com/fionahiklas/simple-static-graphql-api/internal/consumer"
@@ -15,6 +14,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 )
+
+type JSONNode = map[string]interface{}
 
 // Note that we *might* want to name the tests differently but this is actually
 // fine because of the build constraint at the top of this file.  In short this
@@ -34,6 +35,8 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 			// TODO: Are there names significant?
 			Consumer: "apiconsumer",
 			Provider: "apiprovider",
+			LogDir:   "../../build/pact/logs",
+			PactDir:  "../../build/pact",
 		}
 
 		// The 'true' argument means "start the mock server"
@@ -52,13 +55,17 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 				Method: http.MethodPost,
 				Path:   dsl.Match(graphQLPathSuffix),
 				// Using trim to make the body slightly different to the one the consumer really sends
-				Body:    strings.TrimSpace(consumer.AllAlarmSystemQuery),
-				Headers: dsl.MapMatcher{"Content-Type": dsl.Match([]string{"application/json"})},
+				Body: JSONNode{
+					"query": "{ alarmSystems { name } }",
+				},
+				// Not sure how this matcher works with multiple values for headers, didn't like an array
+				Headers: dsl.MapMatcher{"Content-Type": dsl.Match("application/json")},
 			}).
 			WillRespondWith(dsl.Response{
-				Status:  http.StatusOK,
-				Body:    testHappyResponse,
-				Headers: dsl.MapMatcher{"Content-Type": dsl.Match([]string{"application/json"})},
+				Status: http.StatusOK,
+				Body:   testHappyResponse,
+				// Not sure how this matcher works with multiple values for headers, didn't like an array
+				Headers: dsl.MapMatcher{"Content-Type": dsl.Match("application/json")},
 			})
 
 		err := pactInstance.Verify(func() error {
