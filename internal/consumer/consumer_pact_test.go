@@ -32,7 +32,7 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 
 	t.Run("pact consumer test", func(t *testing.T) {
 		pactInstance := dsl.Pact{
-			// These names are used
+			// These names are used to identify provider/consumer in Pact test output
 			Consumer: "apiconsumer",
 			Provider: "apiprovider",
 			LogDir:   "../../build/pact/consumer/logs",
@@ -53,19 +53,19 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 			UponReceiving("All Alarms is requested").
 			WithRequest(dsl.Request{
 				Method: http.MethodPost,
-				Path:   dsl.Match(graphQLPathSuffix),
+				Path:   dsl.String(graphQLPathSuffix),
 				// Using trim to make the body slightly different to the one the consumer really sends
 				Body: JSONNode{
 					"query": "{ alarmSystems { name } }",
 				},
 				// Not sure how this matcher works with multiple values for headers, didn't like an array
-				Headers: dsl.MapMatcher{"Content-Type": dsl.Match("application/json")},
+				Headers: dsl.MapMatcher{"Content-Type": dsl.String("application/json")},
 			}).
 			WillRespondWith(dsl.Response{
 				Status: http.StatusOK,
 				Body:   testHappyResponse,
 				// Not sure how this matcher works with multiple values for headers, didn't like an array
-				Headers: dsl.MapMatcher{"Content-Type": dsl.Match("application/json")},
+				Headers: dsl.MapMatcher{"Content-Type": dsl.String("application/json")},
 			})
 
 		err := pactInstance.Verify(func() error {
