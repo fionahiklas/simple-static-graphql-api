@@ -3,6 +3,7 @@
 package consumer_test
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -22,31 +23,34 @@ type JSONNode = map[string]interface{}
 // code and the regular test code will never be compiled/linked together
 func TestConsumer_GetAllAlarmNames(t *testing.T) {
 	const (
-		testHappyResponse = `{"data":{"alarmSystems":[{"name":"Greebo"},{"name":"Nanny Ogg"}]}}`
-		graphQLPathSuffix = "/graphql"
+		pactConsumerBaseDir    = "../../build/pact/consumer"
+		testAllAlarmsNameQuery = `{"query": "{ alarmSystems { name } }" }`
+		testHappyResponse      = `{"data":{"alarmSystems":[{"name":"Greebo"},{"name":"Nanny Ogg"}]}}`
+		graphQLPathSuffix      = "/graphql"
 	)
 
 	// For now don't bother with using a mock for the logger
 	log := logrus.New()
 	log.SetLevel(logrus.DebugLevel)
 
+	pactInstance := dsl.Pact{
+		// These names are used to identify provider/consumer in Pact test output
+		Consumer: "apiconsumer",
+		Provider: "apiprovider",
+		LogDir:   pactConsumerBaseDir + "/logs",
+		PactDir:  pactConsumerBaseDir,
+	}
+
+	// The 'true' argument means "start the mock server"
+	pactInstance.Setup(true)
+
+	// This will stop the mock server
+	defer pactInstance.Teardown()
+
+	log.Debugf("Pact server host: %s", pactInstance.Host)
+	log.Debugf("Pact server port: %d", pactInstance.Server.Port)
+
 	t.Run("pact consumer test", func(t *testing.T) {
-		pactInstance := dsl.Pact{
-			// These names are used to identify provider/consumer in Pact test output
-			Consumer: "apiconsumer",
-			Provider: "apiprovider",
-			LogDir:   "../../build/pact/consumer/logs",
-			PactDir:  "../../build/pact/consumer",
-		}
-
-		// The 'true' argument means "start the mock server"
-		pactInstance.Setup(true)
-
-		// This will stop the mock server
-		defer pactInstance.Teardown()
-
-		log.Debugf("Pact server host: %s", pactInstance.Host)
-		log.Debugf("Pact server port: %d", pactInstance.Server.Port)
 
 		pactInstance.AddInteraction().
 			Given("Two Alarms Exist").
@@ -55,15 +59,13 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 				Method: http.MethodPost,
 				Path:   dsl.String(graphQLPathSuffix),
 				// Using trim to make the body slightly different to the one the consumer really sends
-				Body: JSONNode{
-					"query": "{ alarmSystems { name } }",
-				},
+				Body: convertJSONStringToJSONNodes(t, testAllAlarmsNameQuery),
 				// Not sure how this matcher works with multiple values for headers, didn't like an array
 				Headers: dsl.MapMatcher{"Content-Type": dsl.String("application/json")},
 			}).
 			WillRespondWith(dsl.Response{
 				Status: http.StatusOK,
-				Body:   testHappyResponse,
+				Body:   convertJSONStringToJSONNodes(t, testHappyResponse),
 				// Not sure how this matcher works with multiple values for headers, didn't like an array
 				Headers: dsl.MapMatcher{"Content-Type": dsl.String("application/json")},
 			})
@@ -91,10 +93,19 @@ func TestConsumer_GetAllAlarmNames(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Pact test verify failed with error: %s", err)
 		}
-
-		// If all is well then write the pact test
-		if err := pactInstance.WritePact(); err != nil {
-			t.Fatalf("Failed to write the pact test: %s", err)
-		}
 	})
+
+	// If all is well then write the pact test
+	if err := pactInstance.WritePact(); err != nil {
+		t.Fatalf("Failed to write the pact test: %s", err)
+	}
+}
+
+func convertJSONStringToJSONNodes(t *testing.T, textToMarshal string) JSONNode {
+	var jsonNodeData JSONNode
+	err := json.Unmarshal([]byte(textToMarshal), &jsonNodeData)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return jsonNodeData
 }

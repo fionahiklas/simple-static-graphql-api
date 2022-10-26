@@ -4,6 +4,7 @@ package consumer
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -13,9 +14,11 @@ import (
 )
 
 const (
-	AllAlarmSystemQuery  = `{ "query": "{ alarmSystems { name } }" }`
-	JmesPathForAlarmList = "data.alarmSystems[*].name"
+	AllAlarmSystemQuery   = `{ "query": "{ alarmSystems { name } }" }`
+	AllAlarmNamesJmesPath = "data.alarmSystems[*].name"
 )
+
+var allAlarmNamesJmesPathExpression = jmespath.MustCompile(AllAlarmNamesJmesPath)
 
 type logger interface {
 	Errorf(format string, args ...interface{})
@@ -53,7 +56,7 @@ func (con *consumer) GetAllAlarmNames() ([]string, error) {
 
 	if response.StatusCode != http.StatusOK {
 		con.log.Errorf("Incorrect status code: %d", response.StatusCode)
-		return nil, err
+		return nil, fmt.Errorf("incorrect status code: %d", response.StatusCode)
 	}
 
 	var bodyJson interface{}
@@ -67,13 +70,7 @@ func (con *consumer) GetAllAlarmNames() ([]string, error) {
 		return nil, err
 	}
 
-	jmesPathExpression, err := jmespath.Compile(JmesPathForAlarmList)
-	if err != nil {
-		con.log.Errorf("JMESPath '%s' doesn't compile: ", jmesPathExpression, err)
-		return nil, err
-	}
-
-	alarmJsonList, err := jmesPathExpression.Search(bodyJson)
+	alarmJsonList, err := allAlarmNamesJmesPathExpression.Search(bodyJson)
 	if err != nil {
 		con.log.Errorf("Couldn't find alarm list: %s", err)
 		return nil, err

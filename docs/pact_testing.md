@@ -4,11 +4,28 @@
 
 Testing out the Pact testing framework
 
+## Get Started
+
+* Set up the Ruby code for Pact testing locally
+
+```
+export RUBY_VERSION_FOR_PATH=`ruby --version | cut -d' ' -f2 | cut -d. -f1-2`.0
+
+bundle config set path $PWD/.gem
+bundle install
+
+export PATH=$PWD/.gem/ruby/$RUBY_VERSION_FOR_PATH/bin:$PATH
+export GEM_PATH=`gem env gempath`:$PWD/.gem/ruby/$RUBY_VERSION_FOR_PATH
+```
 
 
 ## Notes
 
-### Getting started
+### Initial Setup
+
+__NOTE:__ These were steps carried out when creating the project.  You don't need to repeat 
+these locally.  Instead follow the [Getting started](#GettingStarted) section above
+
 
 #### Installing Ruby
 
