@@ -24,7 +24,7 @@ func NewAlarmSystemResolver(log logger, ctx context.Context, alarm *alarmstorage
 }
 
 func (ar *AlarmSystemResolver) Identifier() graphql.ID {
-	return graphql.ID(ar.alarm.Id)
+	return graphql.ID(ar.alarm.Identifier)
 }
 
 func (ar *AlarmSystemResolver) Name() string {

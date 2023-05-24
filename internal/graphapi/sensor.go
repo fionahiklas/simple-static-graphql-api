@@ -23,7 +23,7 @@ func NewSensorResolver(log logger, ctx context.Context, sensor *alarmstorage.Sen
 }
 
 func (sr *SensorResolver) Identifier() graphql.ID {
-	return graphql.ID(sr.sensor.Id)
+	return graphql.ID(sr.sensor.Identifier)
 }
 
 func (sr *SensorResolver) Name() string {

@@ -2,6 +2,7 @@ package graphapi
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/fionahiklas/simple-static-graphql-api/pkg/alarmstorage"
 
@@ -45,7 +46,11 @@ type AlarmSystemArgs struct {
 }
 
 func (qr *queryResolver) AlarmSystem(ctx context.Context, args AlarmSystemArgs) (*AlarmSystemResolver, error) {
-	return nil, nil
+	alarmFromStorage := qr.storage.GetAlarm(string(args.AlarmSystemId))
+	if alarmFromStorage == nil {
+		return nil, fmt.Errorf("alarm '%s' not found", args.AlarmSystemId)
+	}
+	return NewAlarmSystemResolver(qr.log, ctx, alarmFromStorage), nil
 }
 
 func (qr *queryResolver) AlarmSystems(ctx context.Context) (*[]*AlarmSystemResolver, error) {

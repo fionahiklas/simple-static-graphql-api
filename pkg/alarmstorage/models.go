@@ -1,20 +1,20 @@
 package alarmstorage
 
 type Sensor struct {
-	Id          string
+	Identifier  string
 	Name        string
 	Description string
 }
 
 type Alarm struct {
-	Id          string
+	Identifier  string
 	Name        string
 	Description string
 	Sensors     []*Sensor
 }
 
 type Home struct {
-	Id          string
+	Identifier  string
 	Name        string
 	Description string
 	Alarm       *Alarm

@@ -9,11 +9,10 @@ Testing out the Pact testing framework
 * Set up the Ruby code for Pact testing locally
 
 ```
-export RUBY_VERSION_FOR_PATH=`ruby --version | cut -d' ' -f2 | cut -d. -f1-2`.0
-
 bundle config set path $PWD/.gem
 bundle install
 
+export RUBY_VERSION_FOR_PATH=`ruby --version | cut -d' ' -f2 | cut -d. -f1-2`.0
 export PATH=$PWD/.gem/ruby/$RUBY_VERSION_FOR_PATH/bin:$PATH
 export GEM_PATH=`gem env gempath`:$PWD/.gem/ruby/$RUBY_VERSION_FOR_PATH
 ```
@@ -24,7 +23,7 @@ export GEM_PATH=`gem env gempath`:$PWD/.gem/ruby/$RUBY_VERSION_FOR_PATH
 ### Initial Setup
 
 __NOTE:__ These were steps carried out when creating the project.  You don't need to repeat 
-these locally.  Instead follow the [Getting started](#GettingStarted) section above
+these locally.  Instead, follow the [Getting started](#GettingStarted) section above
 
 
 #### Installing Ruby
@@ -33,6 +32,19 @@ The version of Ruby on Mac is quite old - 2.6.8 when latest is 3.x install using
 
 ``` 
 brew install ruby
+```
+
+Since ruby is "key only" on MacOS (since Apple provides a native version) you need to ensure 
+that your path contains the homebrew bin folder, e.g.
+
+```
+export PATH=$HOME/tools/homebrew/opt/ruby/bin:$PATH
+```
+
+On linux (Debian/Ubuntu)
+
+``` 
+apt install ruby ruby-dev ruby-bundler
 ```
 
 #### Installing Ruby Tools
@@ -56,7 +68,7 @@ I think the last one is only needed for connecting to a Pact broker like [pactfl
 Adding tools into the path
 
 ``` 
-export PATH=$PWD/.gem/ruby/3.1.0/bin:$PATH
+export PATH=$PWD/.gem/ruby/3.2.0/bin:$PATH
 export GEM_PATH=`gem env gempath`:$PWD/.gem/ruby/3.1.0
 ```
 

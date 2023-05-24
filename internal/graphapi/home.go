@@ -24,7 +24,7 @@ func NewHomeResolver(log logger, ctx context.Context, home *alarmstorage.Home) *
 }
 
 func (hr *HomeResolver) Identifier() graphql.ID {
-	return graphql.ID(hr.home.Id)
+	return graphql.ID(hr.home.Identifier)
 }
 
 func (hr *HomeResolver) Name() string {

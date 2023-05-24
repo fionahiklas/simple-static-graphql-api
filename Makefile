@@ -11,13 +11,11 @@ TARGETOS ?= $(shell uname -s)
 DOCKER_REGISTRY ?= host.docker.internal:5555
 
 BUILD_PATH ?= $(CURDIR)/build
-
 GO_MODULE_PATH ?= $(shell head -1 go.mod | cut -d' ' -f2-)
 COMMIT_HASH ?= $(shell git rev-parse --short HEAD)
 CODE_VERSION ?= $(shell cat ./VERSION)
 
 GO_LD_FLAGS = -ldflags="-X ${GO_MODULE_PATH}/internal/version.commitHash=${COMMIT_HASH} -X ${GO_MODULE_PATH}/internal/version.codeVersion=${CODE_VERSION}"
-
 
 .PHONY: help version tidy install_tools lint format generate test test_clean test_report
 
@@ -50,7 +48,7 @@ format: ## Format codebase and check imports
 
 delete_mock: ## Deletes all files that match `mock_*.go`
 	@echo "Deleting all mocks"
-	find . -name "mock_*.go" -print -delete
+	find . -name "mock_*.go" -not -path "./.gopath*" -print -delete
 
 generate: delete_mock ## Generate mock files
 	go generate ./internal/... ./pkg/...
@@ -62,7 +60,7 @@ test_clean: clean_test_cache test ## Run tests but clear the cache first
 
 test: ## Run unit tests and check coverage
 	@echo "Running unit tests"
-	go test ${GO_LD_FLAGS} -coverprofile=coverage.out ./...
+	go test ${GO_LD_FLAGS} -coverprofile=coverage.out ./internal/... ./pkg/...
 
 test_report: test ## Run unit tests and generate an HTML coverage report
 	go tool cover -html=coverage.out
@@ -89,3 +87,8 @@ build_consumer: ## Build the consumer application using native target or from in
 	CGO_ENABLED=0 go build ${GO_LD_FLAGS} -o ${BUILD_PATH}/${APP_NAME_CONSUMER}-${TARGETOS}-${TARGETARCH} ./cmd/${APP_NAME_CONSUMER}
 
 build: build_provider build_consumer ## Build everything
+
+run_local_provider: build_provider ## Run the provider application that has been built locally
+	@echo "Running '${APP_NAME_PROVIDER}' version '${CODE_VERSION}' locally on '${TARGETOS}/${TARGETARCH}'"
+	( ./build/${APP_NAME_PROVIDER}-${TARGETOS}-${TARGETARCH} )
+

@@ -7,6 +7,7 @@ require (
 	github.com/golangci/golangci-lint v1.49.0
 	github.com/graph-gophers/graphql-go v1.4.0
 	github.com/jmespath/go-jmespath v0.4.0
+	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pact-foundation/pact-go v1.7.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/stretchr/testify v1.8.0
@@ -104,7 +105,6 @@ require (
 	github.com/mbilski/exhaustivestruct v1.2.0 // indirect
 	github.com/mgechev/revive v1.2.3 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
-	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/moricho/tparallel v0.2.1 // indirect
 	github.com/nakabonne/nestif v0.3.1 // indirect
 	github.com/nbutton23/zxcvbn-go v0.0.0-20210217022336-fa2cb2858354 // indirect

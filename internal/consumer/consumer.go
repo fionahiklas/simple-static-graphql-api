@@ -10,15 +10,20 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/fionahiklas/simple-static-graphql-api/pkg/alarmstorage"
 	"github.com/jmespath/go-jmespath"
+	"github.com/mitchellh/mapstructure"
 )
 
 const (
 	AllAlarmSystemQuery   = `{ "query": "{ alarmSystems { name } }" }`
+	OneAlarmSystemQuery   = `{"query":"query($identifier: ID!){ alarmSystem(alarmSystemId: $identifier){ identifier name description  } }","variables":{"identifier": "%s"}}`
 	AllAlarmNamesJmesPath = "data.alarmSystems[*].name"
+	OneAlarmJmesPath      = "data.alarmSystem"
 )
 
 var allAlarmNamesJmesPathExpression = jmespath.MustCompile(AllAlarmNamesJmesPath)
+var oneAlarmJmesPathExpression = jmespath.MustCompile(OneAlarmJmesPath)
 
 type logger interface {
 	Errorf(format string, args ...interface{})
@@ -45,34 +50,30 @@ func NewConsumer(log logger, client httpClient, graphqlUrl string) *consumer {
 	}
 }
 
+func (con *consumer) GetOneAlarm(identifier string) (*alarmstorage.Alarm, error) {
+	specificAlarmSystemQuery := fmt.Sprintf(OneAlarmSystemQuery, identifier)
+	oneAlarmJsonObject, err := con.makeGraphQLRequest(specificAlarmSystemQuery, oneAlarmJmesPathExpression)
+	if err != nil {
+		return nil, err
+	}
+
+	oneAlarm, err := convertToAlarmObject(oneAlarmJsonObject)
+	if err != nil {
+		con.log.Errorf("Couldn't convert to an array of strings")
+		return nil, errors.New("not a string array result")
+	}
+	return oneAlarm, nil
+}
+
+func convertToAlarmObject(jsonNodeObject interface{}) (*alarmstorage.Alarm, error) {
+	alarmResult := &alarmstorage.Alarm{}
+	err := mapstructure.Decode(jsonNodeObject, alarmResult)
+	return alarmResult, err
+}
+
 func (con *consumer) GetAllAlarmNames() ([]string, error) {
-	request := con.buildAllAlarmSystemRequest()
-
-	response, err := con.client.Do(request)
+	alarmJsonList, err := con.makeGraphQLRequest(AllAlarmSystemQuery, allAlarmNamesJmesPathExpression)
 	if err != nil {
-		con.log.Errorf("HTTP Request failed: %s", err)
-		return nil, err
-	}
-
-	if response.StatusCode != http.StatusOK {
-		con.log.Errorf("Incorrect status code: %d", response.StatusCode)
-		return nil, fmt.Errorf("incorrect status code: %d", response.StatusCode)
-	}
-
-	var bodyJson interface{}
-	defer response.Body.Close()
-
-	jsonDecoder := json.NewDecoder(response.Body)
-	err = jsonDecoder.Decode(&bodyJson)
-
-	if err != nil {
-		con.log.Errorf("Couldn't decode JSON: %s", err)
-		return nil, err
-	}
-
-	alarmJsonList, err := allAlarmNamesJmesPathExpression.Search(bodyJson)
-	if err != nil {
-		con.log.Errorf("Couldn't find alarm list: %s", err)
 		return nil, err
 	}
 
@@ -83,21 +84,6 @@ func (con *consumer) GetAllAlarmNames() ([]string, error) {
 	}
 
 	return alarmList, nil
-}
-
-// TODO: Cache the URL and request to save time
-func (con *consumer) buildAllAlarmSystemRequest() *http.Request {
-	url, err := url.Parse(con.graphqlUrl)
-	if err != nil {
-		con.log.Errorf("Error parsing URL: %s", err)
-		return nil
-	}
-	return &http.Request{
-		Method: http.MethodPost,
-		URL:    url,
-		Body:   io.NopCloser(strings.NewReader(AllAlarmSystemQuery)),
-		Header: http.Header{"Content-Type": {"application/json"}},
-	}
 }
 
 func convertToArrayOfStrings(jmesPathResult interface{}) ([]string, error) {
@@ -114,4 +100,53 @@ func convertToArrayOfStrings(jmesPathResult interface{}) ([]string, error) {
 		resultArray = append(resultArray, elementAsString)
 	}
 	return resultArray, nil
+}
+
+func (con *consumer) makeGraphQLRequest(queryString string, jmesPathExpression *jmespath.JMESPath) (interface{}, error) {
+	request := con.buildHttpRequestFromGraphQLQueryString(queryString)
+	response, err := con.client.Do(request)
+
+	if err != nil {
+		con.log.Errorf("HTTP Request failed: %s", err)
+		return nil, err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		con.log.Errorf("Incorrect status code: %d", response.StatusCode)
+		return nil, err
+	}
+
+	var bodyJson interface{}
+	defer response.Body.Close()
+
+	jsonDecoder := json.NewDecoder(response.Body)
+	err = jsonDecoder.Decode(&bodyJson)
+
+	if err != nil {
+		con.log.Errorf("Couldn't decode JSON: %s", err)
+		return nil, err
+	}
+
+	payloadData, err := jmesPathExpression.Search(bodyJson)
+
+	if err != nil {
+		con.log.Errorf("Couldn't extract data from response: %s", err)
+		return nil, err
+	}
+	return payloadData, nil
+}
+
+// TODO: Cache the URL and request to save time
+func (con *consumer) buildHttpRequestFromGraphQLQueryString(queryString string) *http.Request {
+	gqlUrl, err := url.Parse(con.graphqlUrl)
+	if err != nil {
+		con.log.Errorf("Error parsing URL: %s", err)
+		return nil
+	}
+	return &http.Request{
+		Method: http.MethodPost,
+		URL:    gqlUrl,
+		Body:   io.NopCloser(strings.NewReader(queryString)),
+		Header: http.Header{"Content-Type": {"application/json"}},
+	}
 }

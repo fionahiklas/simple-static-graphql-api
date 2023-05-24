@@ -9,9 +9,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fionahiklas/simple-static-graphql-api/internal/graphapi"
 	"github.com/fionahiklas/simple-static-graphql-api/internal/version"
-	alarmstorage "github.com/fionahiklas/simple-static-graphql-api/pkg/alarmstorage"
+
+	"github.com/fionahiklas/simple-static-graphql-api/internal/graphapi"
+	"github.com/fionahiklas/simple-static-graphql-api/pkg/alarmstorage"
 	"github.com/golang/mock/gomock"
 	"github.com/pact-foundation/pact-go/dsl"
 	"github.com/pact-foundation/pact-go/types"
@@ -50,6 +51,7 @@ func TestProvider_ProviderAllAlarmNames(t *testing.T) {
 
 	pactInstance := &dsl.Pact{
 		Provider: "apiprovider",
+		Consumer: "apiconsumer",
 		PactDir:  pactProviderBaseDir,
 		// This doesn't appear to be honoured for VerifyProvider
 		LogDir: pactProviderBaseDir + "/logs",
@@ -58,27 +60,32 @@ func TestProvider_ProviderAllAlarmNames(t *testing.T) {
 	providerBaseUrl := fmt.Sprintf("http://localhost:%d", port)
 	log.Debugf("Provider host: %s", providerBaseUrl)
 
-	pactInstance.VerifyProvider(t, types.VerifyRequest{
+	_, err := pactInstance.VerifyProvider(t, types.VerifyRequest{
 		// Doesn't seem to honour the LogDir in the dsl.Pact instance, need to set here
 		PactLogDir:      pactProviderBaseDir + "/logs",
 		Provider:        pactInstance.Provider,
-		ProviderVersion: version.CodeVersion(),
 		ProviderBaseURL: providerBaseUrl,
 		PactURLs:        []string{filepath.ToSlash(fmt.Sprintf("%s/apiconsumer-apiprovider.json", pactConsumerBaseDir))},
+		// This is for PactFlow features
+		//BrokerURL:                  "https://<org domain or name>.pactflow.io",
+		//BrokerToken:                os.Getenv("PACT_BROKER_TOKEN"),
+		ProviderVersion:            version.CodeVersion(),
+		PublishVerificationResults: true,
 		StateHandlers: types.StateHandlers{
 			// Setup any state required by the test
 			// in this case, we ensure there is a "user" in the system
 			"Two Alarms Exist": func() error {
+				log.Debugf("Setting up 'Two Alarms Exist' state")
 				resetMocksAndHandler()
 				mockStorage.EXPECT().GetAlarms().Return([]*alarmstorage.Alarm{
 					&alarmstorage.Alarm{
-						Id:          "1",
+						Identifier:  "1",
 						Name:        "Greebo",
 						Description: "",
 						Sensors:     nil,
 					},
 					&alarmstorage.Alarm{
-						Id:          "2",
+						Identifier:  "2",
 						Name:        "Nanny Ogg",
 						Description: "",
 						Sensors:     nil,
@@ -86,8 +93,25 @@ func TestProvider_ProviderAllAlarmNames(t *testing.T) {
 				})
 				return nil
 			},
+
+			"One Alarm exists": func() error {
+				log.Debugf("Setting up 'One Alarm exists' state")
+				resetMocksAndHandler()
+				mockStorage.EXPECT().GetAlarm("Cat_01").Return(
+					&alarmstorage.Alarm{
+						Identifier:  "Cat_01",
+						Name:        "Greebo",
+						Description: "Cat",
+						Sensors:     nil,
+					})
+				return nil
+			},
 		},
 	})
+
+	if err != nil {
+		log.Debugf("Error in pact provider %s", err)
+	}
 
 }
 

@@ -6,7 +6,17 @@ Simple test application for GraphQL API in Go
 
 ![Main build](../../actions/workflows/build-and-test.yaml/badge.svg?branch=main)
 
-## Notes
+
+## Quickstart
+
+Follow the instructions in [docs/pact_testing.md](docs/pact_testing.md) to setup the 
+Pact tools.
+
+
+## Development Notes
+
+Details of how this project was created.  You don't need to follow these 
+instructions to get things up and running
 
 ### Setup 
 
@@ -62,6 +72,7 @@ to implement accessors for every field in the GraphQL type
 * [Listen on random/free port](https://stackoverflow.com/questions/43424787/how-to-use-next-available-port-in-http-listenandserve)
 * [Read whole file](https://stackoverflow.com/questions/13514184/how-can-i-read-a-whole-file-into-a-string-variable)
 * [Using go ldflags to set version values](https://www.digitalocean.com/community/tutorials/using-ldflags-to-set-version-information-for-go-applications)
+* [Decode maps to structs](https://github.com/mitchellh/mapstructure)
 
 ### Github Actions
 
